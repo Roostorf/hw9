@@ -24,18 +24,18 @@ public class HexadecimalSudoku {
     ArrayList<Integer> legalVal = new ArrayList<Integer>();
     
     // loop over all the rows
-    for (int row = 0; row < sudoku.length; row++ ) {    
-    //  loop over all the columns
-      for (int col = 0; col < sudoku[row].length; col++ ) {
+    for (int row = 0; row < sudoku.length; row++) {    
+      //  loop over all the columns
+      for (int col = 0; col < sudoku[row].length; col++) {
         
         
         
-    //    if sudoku [row][col] is empty -1
-        if (sudoku [row][col] == -1 ) {
-    //      get the legal values for row, col
-            legalVal = legalValues(sudoku, row, col);
+        //    if sudoku [row][col] is empty -1
+        if (sudoku [row][col] == -1) {
+          //      get the legal values for row, col
+          legalVal = legalValues(sudoku, row, col);
         }
-    //      if no legal values return false; base case 2.
+        //      if no legal values return false; base case 2.
         if (legalVal == null) {
           return false;
           
@@ -68,7 +68,7 @@ public class HexadecimalSudoku {
    *
    * @param sudoku the sudoku being solved.
    * @param row the row of the cell to get values for.
-   * @param col the column of the cell.
+   * @param column the col of the cell to get values for.
    * @return an ArrayList of the valid values.
    */
   public static ArrayList<Integer> legalValues(int[][] sudoku, int row, int column) {
@@ -79,25 +79,25 @@ public class HexadecimalSudoku {
     int r = 0;
     int c = 0;
     
-    if(row < 4) {
+    if (row < 4) {
       r = 0;
-    } else if(row < 8) {
+    } else if (row < 8) {
       r = 4;
-    } else if(row < 12) {
+    } else if (row < 12) {
       r = 8;
-    } else if(row < 16) {
+    } else if (row < 16) {
       r = 12;
     }
     
-    if(column < 4) {
+    if (column < 4) {
       r = 0;
-    } else if(column < 8) {
+    } else if (column < 8) {
       r = 4;
-    } else if(column < 12) {
+    } else if (column < 12) {
       r = 8;
-    } else if(column < 16) {
+    } else if (column < 16) {
       r = 12;
-  }
+    }
     
     
     ArrayList<Integer> legalVals = new ArrayList<Integer>();
@@ -115,7 +115,7 @@ public class HexadecimalSudoku {
       
       if (legalVals.contains(sudoku[row][l])) {
         
-       // System.out.println(legalVals.size() + "Legal Vals Size");
+        // System.out.println(legalVals.size() + "Legal Vals Size");
         legalVals.remove(legalVals.indexOf(sudoku[row][l]));
       }
     }
@@ -130,13 +130,13 @@ public class HexadecimalSudoku {
     }
     
     // Remove all the values for the list that are in the 4 x 4 grid
-    for(int l = 0; l < sudoku.length / 4; l++) {
-      for(int m = 0; m < sudoku[l].length / 4; m++) {
-        if(legalVals.contains(sudoku[r + l][c + m])) {
+    for (int l = 0; l < sudoku.length / 4; l++) {
+      for (int m = 0; m < sudoku[l].length / 4; m++) {
+        if (legalVals.contains(sudoku[r + l][c + m])) {
           legalVals.remove(legalVals.indexOf(sudoku[r + l][c + m]));
         }
 
-    }  
+      }  
     }
     
     // if the list size is 0 return null
