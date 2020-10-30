@@ -1,46 +1,114 @@
 package edu.ics211.h09;
 
-import java.util.ArrayList;
 
 /**
  * Class for recursively finding a solution to a Hexadecimal Sudoku problem.
  *
- * @author Biagioni, Edoardo, Cam Moore
+ * @author Biagioni, Edoardo, Cam Moore, Constantine Peros and help from https://www.geeksforgeeks.org/sudoku-backtracking-7/
  *     date August 5, 2016
  *     missing solveSudoku, to be implemented by the students in ICS 211
  */
 public class HexadecimalSudoku {
   
-  
-  /**
-   * Checks the sudoku returning true if all cells are filled. Does not check
-   * validity.
-   *
-   * @return true if all cells are filled, false otherwise.
-   */
-  private static boolean isFilled(int[][] sudoku) {
-    for (int i = 0; i < 16; i++) {
-      for (int j = 0; j < 16; j++) {
-        if (sudoku[i][j] == -1) {
-          return false;
-        }
-      }
-    }
-    return true;
-  }
-  
-  
 
   /**
    * Find an assignment of values to sudoku cells that makes the sudoku valid.
    *
-   * @param sudoku the sudoku to be solved.
+   * @param board the sudoku to be solved.
    * @return whether a solution was found if a solution was found, the sudoku is
    *         filled in with the solution if no solution was found, restores the
    *         sudoku to its original value.
    */
-  public static boolean solveSudoku(int[][] sudoku) {
+  public static boolean solveSudoku(int[][] board) 
+  {
     // TODO: Implement this method recursively. You may use a recursive helper method.
+    int n = board.length;
+    
+    if (sudoku(board, n)) 
+    {
+      return true;
+      
+    } else 
+    {
+      System.out.println("No solution");
+    }
+  
+  
+  
+    return false;
+  }
+    
+    
+
+  /**
+  * Helper method to solve sudoku.
+  * @param board the sudoku to be solved.
+  * @param boardEdgeLength Length of edge of sudoku board.
+  * @return true or false.
+  */
+  private static boolean sudoku(int[][] board, int boardEdgeLength) 
+  {
+    // TODO Auto-generated method stub
+    int row = - 1;
+    int col = - 1;
+    boolean isPuzzleComplete = true;
+    
+    
+    // Loops to find first empty value
+    // Determine if puzzle is complete
+    for (int i = 0; i < boardEdgeLength; i++) 
+    {
+      for (int j = 0; j < boardEdgeLength; j++) 
+      {
+        if (board[i][j] == -1) 
+        {
+          // what we are working with - coordinate value
+          row = i;
+          col = j;
+          
+          // We still have some remaining
+          // missing values in Sudoku
+          isPuzzleComplete = false;
+          break;     
+        }
+      }
+      if (!isPuzzleComplete) 
+      {
+        break;
+      }
+    }
+    
+    // If puzzle is complete exit recursion
+    if (isPuzzleComplete) {
+      return true;
+    }
+    
+    for (int num = 1; num <= boardEdgeLength; num++)
+    {
+      if (isSafe(board, row, col, num))
+      {
+        board[row][col] = num;
+        if (sudoku(board, boardEdgeLength)) 
+        {
+          return true;
+        } else
+        {
+          // replace it
+          board[row][col] = -1;
+        }
+      } 
+    }
+    return false;
+  }
+
+
+  
+  
+  
+  
+  
+
+  /*
     
     if (sudoku.length != 16) {
       System.out.println("sudoku has " + sudoku.length + " rows, instead of 16");
@@ -54,49 +122,46 @@ public class HexadecimalSudoku {
       }
     }
     
-    ArrayList<Integer> legalVal = new ArrayList<Integer>();
+    //ArrayList<Integer> legalVal = new ArrayList<Integer>();
     
     // loop over all the rows
     for (int row = 0; row < sudoku.length; row++) {    
       //  loop over all the columns
       for (int col = 0; col < sudoku[row].length; col++) {
-        
-        
-        
         //    if sudoku [row][col] is empty -1
         if (sudoku [row][col] == -1) {
           //      get the legal values for row, col
-          legalVal = legalValues(sudoku, row, col);
+          //legalVal = legalValues(sudoku, row, col);
         }
         //      if no legal values return false; base case 2.
         if (legalVal == null) {
           return false;
           
         } else { //      else loop over the legal values
+          
+          
           // probably where my problem
           //int before = sudoku[row][col];
           
           for (int n = 0; n < legalVal.size(); n++) {
-            //        set sudoku [row][col] to legal value
+            
+            
+            //set sudoku [row][col] to legal value
             sudoku[row][col] = legalVal.get(n);
             
             
             if (!isFilled(sudoku)) {
-            
-              
-              return checkSudoku(sudoku, false); // base case 1;
-            
-            
+    
+              checkSudoku(sudoku, false); // base case 1;
+   
+    
             } else {
               
               //restores to original value
-              
-              
               sudoku[row][col] = -1;
-              
-              
-              
+ 
             }
+            
           }
         }
 
@@ -106,20 +171,73 @@ public class HexadecimalSudoku {
     
     return false;
 
-  }
-
+  }*/
+  
+  
   /**
    * Find the legal values for the given sudoku and cell.
    *
-   * @param sudoku the sudoku being solved.
+   * @param board the sudoku being solved.
    * @param row the row of the cell to get values for.
-   * @param column the col of the cell to get values for.
+   * @param col the col of the cell to get values for.
+   * @param num the number.
    * @return an ArrayList of the valid values.
    */
-  public static ArrayList<Integer> legalValues(int[][] sudoku, int row, int column) {
+  public static Boolean isSafe(int[][] board, int row, int col, int num) 
+  {
     // TODO: Implement this method. You may want to look at the checkSudoku method
     // to see how it finds conflicts.
     
+    // row has unique numbers (row-clash)
+    for (int r = 0; r < board.length; r++) 
+    {     
+      // Check if the number we are trying to
+      // place is already present in
+      // that row, return false;
+      if (board[row][r] == num) 
+      {
+        return false;
+      }
+    }
+    
+    // Column has unique numbers (column-clash)
+    for (int c = 0; c < board.length; c++) 
+    {     
+      // Check if the number we are trying to
+      // place is already present in
+      // that column, return false;
+      if (board[c][col] == num) 
+      {
+        return false;
+      }
+    }
+    
+    // Corresponding 4x4 square has
+    // unique number (box-clash)
+    int sqrt = (int) Math.sqrt(board.length);
+    int boxRowStart = row - row % sqrt; 
+    int boxColStart = col - col % sqrt;
+    
+    for (int r = boxRowStart; r < boxRowStart + sqrt; r++) 
+    {
+      for (int c = boxColStart; c < boxColStart + sqrt; c++) 
+      {
+        if (board[r][c] == num) 
+        {
+          return false;        
+        }   
+      }
+      
+    }
+    
+    return true;
+    
+  }
+    
+    
+  //CHECKSTYLE: OFF    
+    
+  /*
     // Create an arraylist
     int r = 0;
     int c = 0;
@@ -133,6 +251,8 @@ public class HexadecimalSudoku {
     } else if (row < 16) {
       r = 12;
     }
+  
+    
     
     if (column < 4) {
       r = 0;
@@ -190,9 +310,8 @@ public class HexadecimalSudoku {
     }
     
     // return list
-    return legalVals;
-  }
-
+    return legalVals;*/
+  //CHECKSTYLE: ON
 
   /**
    * checks that the sudoku rules hold in this sudoku puzzle. cells that contain
@@ -205,7 +324,7 @@ public class HexadecimalSudoku {
   public static boolean checkSudoku(int[][] sudoku, boolean printErrors) {
     if (sudoku.length != 16) {
       if (printErrors) {
-        System.out.println("sudoku has " + sudoku.length + " rows, should have 16");
+        System.out.println("sudoku has " + sudoku.length + " rows instead of 16");
       }
       return false;
     }
@@ -213,7 +332,7 @@ public class HexadecimalSudoku {
       if (sudoku[i].length != 16) {
         if (printErrors) {
           System.out.println("sudoku row " + i + " has "
-              + sudoku[i].length + " cells, should have 16");
+              + sudoku[i].length + " cells instead of 16");
         }
         return false;
       }
