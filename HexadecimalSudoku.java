@@ -46,7 +46,6 @@ public class HexadecimalSudoku {
           for (int n = 0; n < legalVal.size(); n++) {
             //        set sudoku [row][col] to legal value
             sudoku[row][col] = legalVal.get(n);
-            
             if (solveSudoku(sudoku)) {
               return true;
             } else {
