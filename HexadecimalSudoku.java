@@ -10,6 +10,26 @@ import java.util.ArrayList;
  *     missing solveSudoku, to be implemented by the students in ICS 211
  */
 public class HexadecimalSudoku {
+  
+  
+  /**
+   * Checks the sudoku returning true if all cells are filled. Does not check
+   * validity.
+   *
+   * @return true if all cells are filled, false otherwise.
+   */
+  private static boolean isFilled(int[][] sudoku) {
+    for (int i = 0; i < 16; i++) {
+      for (int j = 0; j < 16; j++) {
+        if (sudoku[i][j] == -1) {
+          return false;
+        }
+      }
+    }
+    return true;
+  }
+  
+  
 
   /**
    * Find an assignment of values to sudoku cells that makes the sudoku valid.
@@ -21,6 +41,19 @@ public class HexadecimalSudoku {
    */
   public static boolean solveSudoku(int[][] sudoku) {
     // TODO: Implement this method recursively. You may use a recursive helper method.
+    
+    if (sudoku.length != 16) {
+      System.out.println("sudoku has " + sudoku.length + " rows, instead of 16");
+      return false;
+    }
+    for (int i = 0; i < sudoku.length; i++) {
+      if (sudoku[i].length != 16) {
+        System.out.println("sudoku row " + i + " has "
+              + sudoku[i].length + " instead of 16");
+        return false;
+      }
+    }
+    
     ArrayList<Integer> legalVal = new ArrayList<Integer>();
     
     // loop over all the rows
@@ -41,16 +74,28 @@ public class HexadecimalSudoku {
           
         } else { //      else loop over the legal values
           // probably where my problem
-          int before = sudoku[row][col];
+          //int before = sudoku[row][col];
           
           for (int n = 0; n < legalVal.size(); n++) {
             //        set sudoku [row][col] to legal value
             sudoku[row][col] = legalVal.get(n);
-            if (solveSudoku(sudoku)) {
-              return true;
+            
+            
+            if (!isFilled(sudoku)) {
+            
+              
+              return checkSudoku(sudoku, false); // base case 1;
+            
+            
             } else {
+              
               //restores to original value
-              sudoku[row][col] = before;
+              
+              
+              sudoku[row][col] = -1;
+              
+              
+              
             }
           }
         }
@@ -59,7 +104,7 @@ public class HexadecimalSudoku {
     }
     
     
-    return checkSudoku(sudoku, false); // base case 1;
+    return false;
 
   }
 
